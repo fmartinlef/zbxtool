@@ -139,3 +139,16 @@ API
 Training
 Blog
 About
+
+#vscode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+
+# test and clients parts
+covea*
+zbx_config/
+zbx_templates/

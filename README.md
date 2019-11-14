@@ -80,10 +80,13 @@ L'accès à une console configurée pour exécuter des scripts python s'effectue
 ## Installation et configuration de zbxtool
 1/ créer le répertoire projet
     
-    mkdir zbxtool
-    cd zbxtool
+    mkdir projets
+    cd projets
 
-2/ copier le répertoire zbxtool (ou faire un git clone depuis le repo)
+2/ faire un git clone puis se positionner dans le répertoire
+
+    git clone git@github.com:fmartinlef/zbxtool.git
+    cd zbxtool
 
 3/ créer l'environnement virtuel pour le développement
 
@@ -91,7 +94,8 @@ L'accès à une console configurée pour exécuter des scripts python s'effectue
 
 4/ activer l'environnement virtuel
 
-    venv\Scripts\activate.bat
+    venv\Scripts\activate.bat -> windows
+    source venv/bin/activate -> linux ou macos
 
 5/ installer les modules python nécessaires aux utilitaires
 
@@ -113,7 +117,4 @@ L'accès à une console configurée pour exécuter des scripts python s'effectue
     python hosts_config.py --help
     python templates_export.py --help
 
-9/ synchronisation avec repo bitbucket / github
-
-    ... à mettre en place une fois le repo zbxtool créé ...
 

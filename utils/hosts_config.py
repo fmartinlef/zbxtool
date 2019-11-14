@@ -399,10 +399,11 @@ if __name__ == '__main__':
 
     xlfile = args.xlfile or config[module]["xlfile"] or "host.xlsx"
 
-    hosts_dir = config[module]["save_dir"] 
+    zbxtool_dir = config["paths"]["zbxtool_dir"]  
+    dir_data = zbxtool_dir + "/"  + config[module]["save_dir"] + "/"  + zbxenv + "/"
 
-    cwd = os.getcwd()
-    dir_data = cwd + hosts_dir + "/" + zbxenv + "/"
+    print("DIRECTORY : ",dir_data)
+
     if not os.path.exists(dir_data):
         os.makedirs(dir_data)
 
