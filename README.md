@@ -30,6 +30,7 @@ The calling parameters order are
     --zbxenv ZBXENV    config file zabbix environment section
 
 1/ export the templates list in json or html format in subdirectories (hostgroup named) 
+
 2/ document the template in html format in /doc subdirectory
  
 
