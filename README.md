@@ -1,22 +1,20 @@
 # Introduction
-zbxtool est un ensemble d'utilitaires python en ligne de commandes pour l'administration de la plate forme zabbix
+zbxtool is a set of python command line utilities for zabbix administration
 
-Ils sont contenus dans le sous répertoire utils, les utilitaires se lancent depuis ce répertoire, pour y accéder depuis le répertoire zbxtool
-    ''cd utils''
+The utilities scripts are localized in utils subdirectory
 
+# Tools description 
+## Order of calling parameters
+The calling parameters order are
 
-# Description des utilitaires 
-## Prise en compte des paramètres d'appel
-L'ordre de prise en compte des paramètres d'appel des différents scripts est le suivant
+1- option in command line (-- parameter in command line) 
 
-1- option passée en paramètre d'appel
+2- option in config file
 
-2- option configurée dans le fichier de configuration
-
-3- option configurée par défaut (celui qui figure dans l'appel de l'aide du script)
+3- default option (appear whith --help option))
 
 
-## utilitaire :: export_templates.py
+## tool :: export_templates.py
     usage: export_templates.py [-h] [--config CONFIG] [--verbose VERBOSE]
                             [--tplname TPLNAME] [--grpname GRPNAME]
                             [--zbxenv ZBXENV]
@@ -31,10 +29,11 @@ L'ordre de prise en compte des paramètres d'appel des différents scripts est l
     --grpname GRPNAME  template group name regex mask (default: Template)
     --zbxenv ZBXENV    config file zabbix environment section
 
-1/ Exporte les templates en format xml et json
-2/ génère une documentation HTML des templates déposée dans le sous répertoire /doc
+1/ export the templates list in json or html format in subdirectories (hostgroup named) 
+2/ document the template in html format in /doc subdirectory
+ 
 
-## utilitaire :: hosts_config.py
+## tool :: hosts_config.py
     usage: hosts_config.py [-h] [--config CONFIG] [--verbose VERBOSE]
                         [--zbxenv ZBXENV] [--xlfile XLFILE] [--limit LIMIT]
 
@@ -48,71 +47,75 @@ L'ordre de prise en compte des paramètres d'appel des différents scripts est l
     --xlfile XLFILE    name of excel output file
     --limit LIMIT      for test purpose, limits the number of host scanned
 
-Produit un fichier excel avec 4 feuilles
-Feuille « Hosts » : inventaire de tous les hosts chargés dans l’environnement zabbix comprenant les champs suivants :
-- Caractéristiques des hosts -> les colonnes sont préfixées par la chaîne « ho_ »: nom, description, statut d’ajout (si autodécouverte), état (actif ou inactif), …
-- Liste de toutes les users macros -> les colonnes sont préfixées par la chaîne « ma_ »
-- Liste de tous les tags affectés à un host -> les colonnes sont préfixées par la chaîne « ta_ »
-- Liste de toutes les valeurs alimentées des données d’inventaire -> les colonnes sont préfixées par la chaîne « in_ »
+Create an excel file with 4 sheets
+« Hosts » sheet : inventory of all hosts 
+- hosts attributes -> excel columns name are prefixed by "ho_"
+- List of all affected users macros -> columns are prefixed by "ma_" 
+- List of all affected host tags values  -> columns are prefixed by "ta_"
+- List of all affected inventory values -> columns are prefixed by "in_"
 
-Feuille « Groups » : liste des groupes auxquelles appartiennent les Hosts
+« Groups » sheet : xref list of all host + associated hostgroups 
 
-Feuille « Templates » : liste des templates auxquels appartiennent les Hosts
+« Templates » : xref list of all host + associated templates 
 
-Feuille « STATS » : tableaux croisés simples de colonnes choisies dans les feuilles hosts / groups et templates
+« STATS » sheet : pivot table simples for host count in several columns 
 
-# Installation environnement pour développement
-## Installation environnement python -> sur votre poste de travail windows
-Les utilitaires ont été développés avec la version 3.7 de python
-
-si vous disposez des droits d'admin sur votre poste de travail
-    https://www.python.org/downloads/release/python-375/
-
-si vous ne disposez pas des droits d'admin sur votre poste de travail
-    https://sourceforge.net/projects/portable-python/files/Portable%20Python%203.7/Portable%20Python-3.7.5%20x64.exe/download
+# Installation for developement
+Prerequesites : - python 3.7 +
 
 
-Exécuter le fichier qui dizipera le répertoire que vous pourrez alors recopier dans le répertoire de votre choix
-
-L'accès à une console configurée pour exécuter des scripts python s'effectue alors en exécutant le fichier
-    Console-Launcher.exe
-
-## Installation et configuration de zbxtool
-1/ créer le répertoire projet
+## zbxtool installation and configuration
+1/ if not exist create a project directory 
     
-    mkdir projets
-    cd projets
+    mkdir projects
+    cd projects
 
-2/ faire un git clone puis se positionner dans le répertoire
+2/ git clone of project
 
-    git clone git@github.com:fmartinlef/zbxtool.git
+    git clone https://github.com/fmartinlef/zbxtool.git
     cd zbxtool
 
-3/ créer l'environnement virtuel pour le développement
+3/ create the virtual environnement for development purpose
 
     python -m venv venv
 
-4/ activer l'environnement virtuel
+4/ activate virtual environment
 
     venv\Scripts\activate.bat -> windows
     source venv/bin/activate -> linux ou macos
 
-5/ installer les modules python nécessaires aux utilitaires
+5/ python modules pre requisites
 
     pip install -r requirements.txt
 
-6/ accéder au répertoire d'exécution des utilitaires
+6/ access of utils directory
 
     cd utils
 
-7/ vérifier / paramétrer le fichier de configuration selon les besoins
-    editer le fichier "config.ini"
-    remplacer les variables par les valeurs correspondantes
+7/ adapt config.ini for use
+    replace variables with the corresponding values
+    
         zbx_url = <zabbix url>
         zbx_usr = <zabbix usr>
         zbx_pwd = <zabbix pwd>
 
-8/ lancer les utilitaires en ligne de commande
+8/ execute the utilities
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     python hosts_config.py --help
     python templates_export.py --help
