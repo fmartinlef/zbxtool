@@ -101,23 +101,16 @@ Prerequesites : - python 3.7 +
 
 8/ execute the utilities
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     python hosts_config.py --help
     python templates_export.py --help
 
+## example of use
+1/ python hosts_config.py --zbxenv prod --limit 10
 
+generate an excel file with first 10 hosts in zabbix production environnement
+the generated file is in <zbxtool_dir>/<save_dir>/"zbxenv"/ directory
+
+2/ python templates_export.py --grpname tpl --tplname Template --verbose true
+
+export and document templates which name contains "Template" and pertains in hostgroup "tpl*".
+the generated files are in <zbxtool_dir>/<save_dir>/"zbxenv"/"hostgroup" directories
