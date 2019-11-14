@@ -149,6 +149,6 @@ About
 *.code-workspace
 
 # test and clients parts
-covea*
+.covea*
 zbx_config/
 zbx_templates/

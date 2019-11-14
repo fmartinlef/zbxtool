@@ -167,12 +167,14 @@ def zbx_render_html(tpl):
 
     doc_html = template.render(tpl=tpl)
     
-    with open('template.html', 'w') as f:
+    fname = dir_data + "template.html"
+
+    with open(fname, 'w') as f:
         f.write(doc_html)
     f.closed
 
     fn = te["name"] + ".html"
-    result = save_inhg(zapi,te,"template.html",fn)
+    result = save_inhg(zapi,te,fname,fn)
     
     return result
 
@@ -396,7 +398,6 @@ if __name__ == '__main__':
     if mode_verbose:
         logging.info("environnement zabbix = " + zbxenv)
 
-    tpl_dir = config[module]["save_dir"]
 
     # init global variable
     global sel
@@ -405,10 +406,8 @@ if __name__ == '__main__':
     desc = {}
 
     # start of program logic
-
-    cwd = os.getcwd()
-    # print(cwd)
-    dir_data = cwd + tpl_dir + "/" + zbxenv + "/"
+    zbxtool_dir = config["paths"]["zbxtool_dir"]  
+    dir_data = zbxtool_dir + "/"  + config[module]["save_dir"] + "/"  + zbxenv + "/"
 
     if not os.path.exists(dir_data):
         os.makedirs(dir_data)
@@ -417,8 +416,7 @@ if __name__ == '__main__':
     tmp_json = tempfile.NamedTemporaryFile().name
 
 
-    if mode_verbose:
-        logging.info("repertoire de templates = %s " % dir_data)
+    logging.info("repertoire de templates = %s " % dir_data)
 
     zapi = zbx_connect(config,zbxenv)
 
