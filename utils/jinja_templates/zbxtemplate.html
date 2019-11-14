@@ -1,0 +1,374 @@
+{% extends "base.html" %}
+{% block title %}Template {% endblock %}
+{% block head %}
+    {{ super() }}
+    <style type="text/css">
+        .tg  {border-collapse:collapse;border-spacing:0;border-color:#9ABAD9;}
+        .tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:#9ABAD9;color:#444;background-color:#D2E4FC;}
+        .tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:#9ABAD9;color:#fff;background-color:#409cff;}
+        .tg .tg-cly1{text-align:left;vertical-align:middle}
+        .tg .tg-5lax{background-color:#EBF5FF;text-align:left;vertical-align:middle}
+    </style>
+{% endblock %}
+{% block content %}
+    <h1>Template : {{ tpl["template"]["data"][0]["host"] }}</h1>
+        <table class="tg">
+            <tr>
+                <th class="tg-cly1">{{ tpl["template"]["title"]["description"] }}</th>
+                <td class="tg-cly1" colspan=2>{{ tpl["template"]["data"][0]["description"] }}</td>
+            </tr>
+            <tr>
+                <th class="tg-cly1">{{ tpl["hostgroup"]["title"]["name"] }}</th>
+                <td class="tg-cly1"> 
+                    {% for hg in tpl["hostgroup"]["data"] %}
+                       {{ hg["name"] }},
+                    {% endfor %}
+                </td>
+            </tr>
+        </table>
+    <h2>User macro</h2>
+    {% if tpl["macros"] %}
+        <table class="tg">
+            <tr>
+                <th class="tg-cly1">{{ tpl["macros"]["title"]["macro"] }}</th>
+                <th class="tg-cly1">{{ tpl["macros"]["title"]["value"] }}</th>
+            </tr>
+            {% for macro in tpl["macros"].data %}
+                <tr>
+                    <td class="tg-cly1">{{ macro.macro }}</td>
+                    <td class="tg-cly1">{{ macro.value }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p> **** pas de user macros **** </p>
+    {% endif %}    
+    <br/>
+
+    <h2>Items</h2>
+    {% if tpl["items"] %}
+        <table class="tg">
+            <tr>
+                <th class="tg-cly1">{{ tpl["items"]["title"]["name"] }}</th>
+                <th class="tg-cly1">{{ tpl["items"]["title"]["key_"] }}</th>
+                <th class="tg-cly1">{{ tpl["items"]["title"]["type"] }}</th>
+                <th class="tg-cly1">{{ tpl["items"]["title"]["delay"] }}</th>
+                <th class="tg-cly1">{{ tpl["items"]["title"]["history"] }}</th>
+                <th class="tg-cly1">{{ tpl["items"]["title"]["trends"] }}</th>
+                <th class="tg-cly1">{{ tpl["items"]["title"]["status"] }}</th>
+            </tr>
+            <tr>
+                <th class="tg-cly1"></th>
+                <th class="tg-cly1" colspan="6"><i>{{ tpl["items"]["title"]["description"] }}</i></th>
+            </tr>
+            {% for item in tpl["items"]["data"] %}
+                {% if  item["status"] == "actif" %}
+                    {% set bgitem = "#32cb00" %}
+                {% elif item["status"] == "inactif" %}
+                    {% set bgitem = "#E45959" %}
+                {% endif %}
+            <tr>
+                <td class="tg-cly1" width=25%>{{ item["name"] }}</td>
+                <td class="tg-cly1">{{ item["key_"] }}</td>
+                <td class="tg-cly1">{{ item["type"] }}
+                {%if item["type"] in ["SNMPv1 Agent","SNMPv2 agent", "SNMPv3 agent"] %}
+                        <br/>oid: {{ item["snmp_oid"] }}
+                {% endif %}
+                </td>
+                <td class="tg-cly1">{{ item["delay"] }}</td>
+                <td class="tg-cly1">{{ item["history"] }}</td>
+                <td class="tg-cly1">{{ item["trends"] }}</td>
+                <td class="tg-cly1" style="background-color:{{ bgitem }}">{{ item["status"] }}</td>
+            </tr>
+            {%if item["type"] == "calculated" %}
+            <tr>
+                <td class="tg-5lax">Formule</td>
+                <td class="tg-5lax" colspan="6">{{ item["params"] }}</td>
+            </tr>
+            {% endif %}
+            {%if item["type"] == "database monitor" %}
+            <tr>
+                <td class="tg-5lax">Requete SQL</td>
+                <td class="tg-5lax" colspan="6">{{ item["params"] }}</td>
+            </tr>
+            {% endif %}
+            {%if item["type"] == "SSH agent" or item["type"] == "Telnet agent" %}
+            <tr>
+                <td class="tg-5lax">Script</td>
+                <td class="tg-5lax" colspan="6">{{ item["params"] }}</td>
+            </tr>
+            {% endif %}
+            {%if item["type"] == "HTTP agent" %}
+            <tr>
+                <td class="tg-5lax">{{ tpl["items"]["title"]["url"] }}</td>
+                <td class="tg-5lax" colspan="6">{{ item["url"] }}</td>
+            </tr>
+            {% endif %}
+            <tr>
+                <td class="tg-5lax"></td>
+                <td class="tg-5lax" colspan="6"><i>{{ item["description"] }}</i></td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p> **** pas d'items **** </p>
+    {% endif %}
+    <br/>
+
+    <h2>Triggers</h2>
+    {% if tpl["triggers"] %}
+        <table class="tg">
+            <tr>
+                <th class="tg-cly1">{{ tpl["triggers"]["title"]["description"] }}</th>
+                <th class="tg-cly1">{{ tpl["triggers"]["title"]["expression"] }}</th>
+                <th class="tg-cly1">{{ tpl["triggers"]["title"]["priority"] }}</th>
+                <th class="tg-cly1">{{ tpl["triggers"]["title"]["tags"] }}</th>
+                <th class="tg-cly1">{{ tpl["triggers"]["title"]["status"] }}</th>
+            </tr>
+            <tr>
+                <th class="tg-cly1"></th>
+                <th class="tg-cly1" colspan="4"><i>{{ tpl["triggers"]["title"]["comments"] }}</i></th>
+            </tr>
+            </tr>
+            {% for trigger in tpl["triggers"]["data"] %}
+                {% if  trigger["status"] == "actif" %}
+                    {% set bgtrigger_status = "#32cb00" %}
+                {% elif trigger["status"] == "inactif" %}
+                    {% set bgtrigger_status = "#E45959" %}
+                {% endif %}
+                {% if  trigger["priority"] == "not classified" %}
+                    {% set bgtrigger_priority = "#97AAB3" %}
+                {% elif trigger["priority"] == "information" %}
+                    {% set bgtrigger_priority = "#7499FF" %}
+                {% elif trigger["priority"] == "warning" %}
+                    {% set bgtrigger_priority = "#FFC859" %}
+                {% elif trigger["priority"] == "average" %}
+                    {% set bgtrigger_priority = "#FFA059" %}
+                {% elif trigger["priority"] == "high" %}
+                    {% set bgtrigger_priority = "#E97659" %}
+                {% elif trigger["priority"] == "disaster" %}
+                    {% set bgtrigger_priority = "#E45959" %}                    
+                {% endif %}
+                <tr>
+                    <td class="tg-cly1" width=25%>{{ trigger["description"] }}</td>
+                    <td class="tg-cly1" width=45%>{{ trigger["expression"] }}</td>
+                    <td class="tg-cly1" style="background-color:{{ bgtrigger_priority}}">{{ trigger["priority"] }}</td>
+                    <td class="tg-cly1" width=15%>{% for tag in trigger["tags"] %}{{ tag["tag"] }}={{ tag["value"] }}{%- if not loop.last -%}<br/>{% endif %}{% endfor %}</td>
+                    <td class="tg-cly1" style="background-color:{{ bgtrigger_status }}">{{ trigger["status"] }}</td>
+                </tr>
+                {% if trigger["url"] %}
+                    <tr>
+                        <th class="tg-cly1">{{ tpl["triggers"]["title"]["url"] }}</th>
+                        <td class="tg-5lax" colspan="4"><i>{{ trigger["url"] }}</i></td>
+                    </tr>
+                {% endif %}
+                <tr>
+                    <td class="tg-5lax"></td>
+                    <td class="tg-5lax" colspan="4"><i>{{ trigger["comments"] }}</i></td>
+                </tr>
+            </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p> **** pas de triggers **** </p>
+    {% endif %}
+    <br/>    
+
+    <h2>Web scenario</h2>
+    {% if tpl["webscenar"] %}
+        <table class="tg">
+            <tr>
+                <th class="tg-cly1" colspan="2">{{ tpl["webscenar"][0]["scenar"]["title"]["name"] }}</th>
+                <th class="tg-cly1">{{ tpl["webscenar"][0]["scenar"]["title"]["delay"] }}</th>
+                <th class="tg-cly1">{{ tpl["webscenar"][0]["scenar"]["title"]["status"] }}</th>
+            </tr>
+            <tr>
+                <th class="tg-cly1">{{ tpl["webscenar"][0]["step"]["title"]["name"] }}</th>
+                <th class="tg-cly1">{{ tpl["webscenar"][0]["step"]["title"]["url"] }}</th>
+                <th class="tg-cly1">{{ tpl["webscenar"][0]["step"]["title"]["status_code"] }}</th>
+                <th class="tg-cly1">{{ tpl["webscenar"][0]["step"]["title"]["required"] }}</th>
+            </tr>
+        {% for scenar in tpl["webscenar"]%}
+            <tr>
+                <td class="tg-cly1" colspan="2">{{ scenar["scenar"]["data"][0]["name"] }}</td>
+                <td class="tg-cly1">{{ scenar["scenar"]["data"][0]["delay"] }}</td>
+                {% if  scenar["scenar"]["data"][0]["status"] == "actif" %}
+                    {% set bg = "#32cb00" %}
+                {% elif scenar["scenar"]["data"][0]["status"] == "inactif" %}
+                    {% set bg = "#E45959" %}
+                {% endif %}
+                <td class="tg-cly1" style="background-color:{{ bg }}">{{ scenar["scenar"]["data"][0]["status"] }}</td>
+            </tr>
+            {% for step in scenar["step"]["data"] %}
+            <tr>
+                <td class="tg-5lax">{{ step["name"] }}</td>
+                <td class="tg-5lax">{{ step["url"] }}</td>
+                <td class="tg-5lax">{{ step["status_code"] }}</td>
+                <td class="tg-5lax">{{ step["required"] }}</td>
+            </tr>
+            {% endfor %}
+        {% endfor %}
+        </table>
+    {% else %}
+        <p> **** pas de web scenarios **** </p>
+    {% endif %}
+    <br/> 
+
+
+    <h1>Discovery rules (LLD)</h1>
+    {% if tpl["drules"] %}
+        {% for drule in tpl["drules"] %}
+            <h2>Discovery rules : {{ drule["drule"]["data"][0]["name"] }}</h2>
+            <table class="tg">
+                {% if  drule["drule"]["data"][0]["status"] == "actif" %}
+                    {% set bgdrule = "#32cb00" %}
+                {% elif drule["drule"]["data"][0]["status"] == "inactif" %}
+                    {% set bgdrule = "#E45959" %}
+                {% endif %}
+                <tr>
+                    <th class="tg-cly1">{{ drule["drule"]["title"]["key_"] }}</th>
+                    <th class="tg-cly1">{{ drule["drule"]["title"]["type"] }}</th>
+                    <th class="tg-cly1">{{ drule["drule"]["title"]["delay"] }}</th>
+                    <th class="tg-cly1">{{ drule["drule"]["title"]["status"] }}</th>
+                </tr>
+                <tr>
+                    <td class="tg-cly1">{{ drule["drule"]["data"][0]["key_"] }}</td>
+                    <td class="tg-cly1">{{ drule["drule"]["data"][0]["type"] }}</td>
+                    <td class="tg-cly1">{{ drule["drule"]["data"][0]["delay"] }}</td>
+                    <td class="tg-cly1" style="background-color:{{ bgdrule }}">{{ drule["drule"]["data"][0]["status"] }}</td>
+                </tr>
+                <tr>
+                    <td class="tg-5lax" colspan="4"><i>{{ drule["drule"]["data"][0]["description"] }}</i></td>
+                </tr>
+            </table>
+
+        <h3>Items</h3>
+            {% if drule["items"] %}
+                <table class="tg">
+                    <tr>
+                        <th class="tg-cly1">{{ drule["items"]["title"]["name"] }}</th>
+                        <th class="tg-cly1">{{ drule["items"]["title"]["key_"] }}</th>
+                        <th class="tg-cly1">{{ drule["items"]["title"]["type"] }}</th>
+                        <th class="tg-cly1">{{ drule["items"]["title"]["delay"] }}</th>
+                        <th class="tg-cly1">{{ drule["items"]["title"]["history"] }}</th>
+                        <th class="tg-cly1">{{ drule["items"]["title"]["trends"] }}</th>
+                        <th class="tg-cly1">{{ drule["items"]["title"]["status"] }}</th>
+                    </tr>
+                    <tr>
+                        <th class="tg-cly1"></th>
+                        <th class="tg-cly1" colspan="6"><i>{{ drule["items"]["title"]["description"] }}</i></th>
+                    </tr>
+                    {% for item in drule["items"]["data"] %}
+                        {% if  item["status"] == "actif" %}
+                            {% set bgitem = "#32cb00" %}
+                        {% elif item["status"] == "inactif" %}
+                            {% set bgitem = "#E45959" %}
+                        {% endif %}
+                        <tr>
+                            <td class="tg-cly1" width=25%>{{ item["name"] }}</td>
+                            <td class="tg-cly1">{{ item["key_"] }}</td>
+                            <td class="tg-cly1">{{ item["type"] }}
+                            {%if item["type"] in ["SNMPv1 Agent","SNMPv2 agent", "SNMPv3 agent"] %}
+                            <br/>oid: {{ item["snmp_oid"] }}
+                            {% endif %}
+                            </td>
+                            <td class="tg-cly1">{{ item["delay"] }}</td>
+                            <td class="tg-cly1">{{ item["history"] }}</td>
+                            <td class="tg-cly1">{{ item["trends"] }}</td>
+                            <td class="tg-cly1" style="background-color:{{ bgitem }}">{{ item["status"] }}</td>
+                        </tr>
+                        {%if item["type"] == "calculated" %}
+                        <tr>
+                            <td class="tg-5lax">Formule</td>
+                            <td class="tg-5lax" colspan="6">{{ item["params"] }}</td>
+                        </tr>
+                        {% endif %}
+                        {%if item["type"] == "database monitor" %}
+                        <tr>
+                            <td class="tg-5lax">Requete SQL</td>
+                            <td class="tg-5lax" colspan="6">{{ item["params"] }}</td>
+                        </tr>
+                        {% endif %}
+                        {%if item["type"] == "SSH agent" or item["type"] == "Telnet agent" %}
+                        <tr>
+                            <td class="tg-5lax">Script</td>
+                            <td class="tg-5lax" colspan="6">{{ item["params"] }}</td>
+                        </tr>
+                        {% endif %}
+                        {%if item["type"] == "HTTP agent" %}
+                        <tr>
+                            <td class="tg-5lax">{{ drule["items"]["title"]["url"] }}</td>
+                            <td class="tg-5lax" colspan="6">{{ item["url"] }}</td>
+                        </tr>
+                        {% endif %}
+                        <tr>
+                            <td class="tg-5lax"></td>
+                            <td class="tg-5lax" colspan="6"><i>{{ item["description"] }}</i></td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <p>**** pas de d items ****</p>
+            {% endif %}
+
+        <h3>Triggers</h3>
+            {% if drule["triggers"] %}
+                <table class="tg">
+                    <tr>
+                        <th class="tg-cly1">{{ drule["triggers"]["title"]["description"] }}</th>
+                        <th class="tg-cly1">{{ drule["triggers"]["title"]["expression"] }}</th>
+                        <th class="tg-cly1">{{ drule["triggers"]["title"]["priority"] }}</th>
+                        <th class="tg-cly1">{{ drule["triggers"]["title"]["tags"] }}</th>
+                        <th class="tg-cly1">{{ drule["triggers"]["title"]["status"] }}</th>
+                    </tr>
+                    <tr>
+                        <th class="tg-cly1"></th>
+                        <th class="tg-cly1" colspan="4"><i>{{ drule["triggers"]["title"]["comments"] }}</i></th>
+                    </tr>
+                    {% for item in drule["triggers"]["data"] %}
+                        {% if  item["status"] == "actif" %}
+                            {% set bgitem = "#32cb00" %}
+                        {% elif item["status"] == "inactif" %}
+                            {% set bgitem = "#E45959" %}
+                        {% endif %}
+                        {% if  item["priority"] == "not classified" %}
+                            {% set bgtrigger_priority = "#97AAB3" %}
+                        {% elif item["priority"] == "information" %}
+                            {% set bgtrigger_priority = "#7499FF" %}
+                        {% elif item["priority"] == "warning" %}
+                            {% set bgtrigger_priority = "#FFC859" %}
+                        {% elif item["priority"] == "average" %}
+                            {% set bgtrigger_priority = "#FFA059" %}
+                        {% elif item["priority"] == "high" %}
+                            {% set bgtrigger_priority = "#E97659" %}
+                        {% elif item["priority"] == "disaster" %}
+                            {% set bgtrigger_priority = "#E45959" %}                    
+                        {% endif %}
+                        <tr>
+                            <td class="tg-cly1" width=25%>{{ item["description"] }}</td>
+                            <td class="tg-cly1" width=45%>{{ item["expression"] }}</td>
+                            <td class="tg-cly1" style="background-color:{{ bgtrigger_priority }}">{{ item["priority"] }}</td>
+                            <td class="tg-cly1" width=15%>{% for tag in item["tags"] %}{{ tag["tag"] }}={{ tag["value"] }}{%- if not loop.last -%}<br/>{% endif %}{% endfor %}</td>
+                            <td class="tg-cly1" style="background-color:{{ bgitem }}">{{ item["status"] }}</td>
+                        </tr>
+                        {% if item["url"] %}
+                            <tr>
+                                <td class="tg-cly1">{{ drule["triggers"]["title"]["url"] }}</td>
+                                <td class="tg-5lax" colspan="4"><i>{{ item["url"] }}</i></td>
+                            </tr>
+                        {% endif %}
+                        <tr>
+                            <td class="tg-5lax"></td>
+                            <td class="tg-5lax" colspan="4"><i>{{ item["comments"] }}</i></td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <p> **** pas de triggers ****</p>
+            {% endif %}    
+        {% endfor %}
+    {% else %}
+        <p> **** pas de discovery rules LLD **** </p>
+    {% endif %}    
+
+{% endblock %}
