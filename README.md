@@ -49,6 +49,3 @@ Prerequesites : - python 3.7 +
     python hosts_config.py --help
     python templates_export.py --help
 
-
-##  who to contribute
--- in progress --
