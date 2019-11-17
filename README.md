@@ -3,7 +3,12 @@ zbxtool is a set of python command line utilities for zabbix administration
 
 The utilities scripts are localized in utils subdirectory
 
-# Tools description 
+# Tools description
+## Tools directories
+admtool : contains a set of tools for zabbix administration
+migtool : contains a set of tools for migrate monitoring solutions to zabbix solution
+
+
 ## Order of calling parameters
 The calling parameters order are
 
@@ -13,8 +18,8 @@ The calling parameters order are
 
 3- default option (appear whith --help option))
 
-
-## tool :: export_templates.py
+## admtool : tools for zabbix administration
+### tool :: export_templates.py
     usage: export_templates.py [-h] [--config CONFIG] [--verbose VERBOSE]
                             [--tplname TPLNAME] [--grpname GRPNAME]
                             [--zbxenv ZBXENV]
@@ -34,7 +39,7 @@ The calling parameters order are
 2/ document the template in html format in /doc subdirectory
  
 
-## tool :: hosts_config.py
+### tool :: hosts_config.py
     usage: hosts_config.py [-h] [--config CONFIG] [--verbose VERBOSE]
                         [--zbxenv ZBXENV] [--xlfile XLFILE] [--limit LIMIT]
 
@@ -105,7 +110,7 @@ Prerequesites : - python 3.7 +
     python hosts_config.py --help
     python templates_export.py --help
 
-## example of use
+### example of use
 1/ python hosts_config.py --zbxenv prod --limit 10
 
 generate an excel file with first 10 hosts in zabbix production environnement
