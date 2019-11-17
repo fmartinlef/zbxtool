@@ -13,6 +13,10 @@ Author : Francois Martin-Lefevre : fml@axynergie.com
 
 import sys
 import os
+CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
+PARENT_DIR = os.path.dirname(CURRENT_DIR)
+sys.path.append(PARENT_DIR)
+
 import argparse
 import filecmp
 import re
@@ -27,8 +31,7 @@ from openpyxl.styles import NamedStyle, PatternFill, Font, Border, Side
 from openpyxl.utils.dataframe import dataframe_to_rows
 import pandas as pd
 
-
-from zbxtool_functions import *
+from admtool.zbxtool_functions import parse_config, init_log, logging, copy_file, zbx_connect, zbx_table
 
  
 def parse_arg():
@@ -304,7 +307,7 @@ def ws_template_data(host_data, host_lst):
 
     return result
 
-def xl_zbx_create(wb, wsname, wstitle,wsdata):
+def xl_create_ws(wb, wsname, wstitle,wsdata):
     ''' create sheet and apply format
 
 
@@ -365,7 +368,7 @@ def xl_stat(ws, pv, startcol):
         inputs :
             - worksheet name (if not exist will be created)
             - pv : pivot dataframe  
-            - startcolumn
+        _ws    - startcolumn
     '''
     for id_row, r in enumerate(dataframe_to_rows(pv)):
         row = list(r)
@@ -382,19 +385,37 @@ def xl_stat(ws, pv, startcol):
                 ws.cell(row=id_row, column=startcol+id_col).style = "zbx data"    
     return
 
+def xl_create_named_style(wb):
+    ''' create excel named style 
+        wb : excel workbook
+
+    '''
+    zbx_title = NamedStyle(name="zbx title")
+    zbx_title.font = Font(bold=True, color="ffffff")
+    zbx_title.fill = PatternFill(fill_type="solid", start_color="538DD5", end_color="538DD5")
+    bd = Side(style="thin", color="538DD5")
+    zbx_title.border = Border(left=bd, top=bd, right=bd, bottom=bd)
+    wb.add_named_style(zbx_title)
+
+    zbx_data = NamedStyle(name="zbx data")
+    zbx_data.font = Font(color="000000")
+    zbx_data.border = Border(left=bd, top=bd, right=bd, bottom=bd)
+    wb.add_named_style(zbx_data)
+
+    return
 
 if __name__ == '__main__':
-
-    module = __file__[0:__file__.find(".")]
-
     ''' process args and config parameters for module variables setting
         1/ args parameter
         2/ config parameters
         3/ if config parameter not exist then args is the default
     '''
 
+    module = __file__[__file__.find("/")+1:__file__.find(".")]
+    mod_path = os.path.dirname(os.path.abspath(__file__))
     args = parse_arg()
-    config = parse_config(args,module)
+    conf_file = mod_path + "/" + args.config
+    config = parse_config(conf_file,module)
 
     mode_verbose = args.verbose or config.getboolean("default", "mode_verbose") or False
     init_log(config, mode_verbose)
@@ -456,23 +477,13 @@ if __name__ == '__main__':
     wb = Workbook()
 
     # create named style for excel statistics sheet formating
-    zbx_title = NamedStyle(name="zbx title")
-    zbx_title.font = Font(bold=True, color="ffffff")
-    zbx_title.fill = PatternFill(fill_type="solid", start_color="538DD5", end_color="538DD5")
-    bd = Side(style="thin", color="538DD5")
-    zbx_title.border = Border(left=bd, top=bd, right=bd, bottom=bd)
-    wb.add_named_style(zbx_title)
-
-    zbx_data = NamedStyle(name="zbx data")
-    zbx_data.font = Font(color="000000")
-    zbx_data.border = Border(left=bd, top=bd, right=bd, bottom=bd)
-    wb.add_named_style(zbx_data)
+    xl_create_named_style(wb)
 
 
     # process host data
     host_title =  ws_host_title(hosts_tbl, zbx_host_list)
     host_data = ws_host_data(hosts_tbl, zbx_host_list)
-    ws_host = xl_zbx_create(wb, "Hosts", host_title, host_data)
+    ws_host = xl_create_ws(wb, "Hosts", host_title, host_data)
  
     logging.info("sheet 'Hosts' created : " + str(len(host_title)) 
             + " cols " + str(len(host_data)) + " rows")
@@ -480,7 +491,7 @@ if __name__ == '__main__':
     # process groups data
     group_title = ["host", "group"]
     group_data = ws_group_data(hosts_tbl, zbx_host_list)
-    ws_groups = xl_zbx_create(wb, "Groups", group_title, group_data)
+    ws_groups = xl_create_ws(wb, "Groups", group_title, group_data)
  
     logging.info("sheet 'Groups' created : " + str(len(group_title)) 
             + " cols " + str(len(group_data)) + " rows")
@@ -489,7 +500,7 @@ if __name__ == '__main__':
     # process templates data
     template_title = ["host", "template"]
     template_data = ws_template_data(hosts_tbl, zbx_host_list)
-    ws_templates = xl_zbx_create(wb, "Templates", template_title, template_data)
+    ws_templates = xl_create_ws(wb, "Templates", template_title, template_data)
 
     logging.info("sheet 'Templates' created : " + str(len(template_title)) 
             + " cols " + str(len(template_data)) + " rows")

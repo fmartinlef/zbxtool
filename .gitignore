@@ -151,3 +151,4 @@ About
 # test and clients parts
 zbx_config/
 zbx_templates/
+zbx_migrate/

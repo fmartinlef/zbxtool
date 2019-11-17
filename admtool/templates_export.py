@@ -10,15 +10,20 @@ Author : Francois Martin-Lefevre : fml@axynergie.com
 
 import sys
 import os
+CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
+PARENT_DIR = os.path.dirname(CURRENT_DIR)
+sys.path.append(PARENT_DIR)
+
 import argparse
 import filecmp
 import re
 import tempfile
+import xml.dom.minidom
 
 from pyzabbix.api import ZabbixAPI, ZabbixAPIException
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
-from zbxtool_functions import *
+from admtool.zbxtool_functions import parse_config, init_log, logging, copy_file, fmt_url_str, fmt_str_trig_expr, zbx_connect, zbx_table
 
  
 def parse_arg():
@@ -146,8 +151,9 @@ def zbx_tpl_fmtquery(resp, qry, sel, title, convert, notshown):
 
 
 def zbx_render_html(tpl):
+    jinja_templates = mod_path + "/jinja_templates"
     env = Environment(
-            loader=FileSystemLoader("./jinja_templates"),
+            loader=FileSystemLoader(jinja_templates),
             autoescape=select_autoescape(['xml']),
             trim_blocks=True,
             lstrip_blocks=True)
@@ -335,11 +341,10 @@ def zbx_tpl_qry(zapi, te, qry):
 
     elif qry == "graphs":
         result = []
-        lst_graphs = zapi.do_request('graph.get',
-                         {"output": "itemid",
-                         "hostids": te,
-                         })['result']
-        # print("graphiques trouvés : ", lst_graphs)
+        # lst_graphs = zapi.do_request('graph.get',
+        #                  {"output": "itemid",
+        #                  "hostids": te,
+        #                  })['result']
 
     result=zbx_tpl_fmtquery(zbx_resp, qry, sel[qry], title, convert, notshown) 
        
@@ -353,18 +358,14 @@ def save_inhg(zapi, te, fn1, fn2):
             fdir = dir_data + hg["name"] + "/doc/"
             to_file = fdir + fn2
             result = copy_file(fdir, fn1, to_file, "doc")
-            if mode_verbose:
-                logging.info("doc '%s.html' %s in '%s' group", te["name"], result, hg["name"])
+            logging.info("doc '%s.html' %s in '%s' group", te["name"], result, hg["name"])
         else:
             result = "nomatch"
-            if mode_verbose:
-                logging.info("doc '%s.html' %s in '%s' group", te["name"], result, hg["name"])
+            logging.info("doc '%s.html' %s in '%s' group", te["name"], result, hg["name"])
     return result
 
 
 if __name__ == '__main__':
-
-    module = __file__[0:__file__.find(".")]
 
     ''' process args and config parameters for module variables setting
         1/ args parameter
@@ -372,8 +373,11 @@ if __name__ == '__main__':
         3/ if config parameter not exist then args is the default
     '''
 
+    module = __file__[__file__.find("/")+1:__file__.find(".")]
+    mod_path = os.path.dirname(os.path.abspath(__file__))
     args = parse_arg()
-    config = parse_config(args,module)
+    conf_file = mod_path + "/" + args.config
+    config = parse_config(conf_file,module)
 
     mode_verbose = args.verbose or config.getboolean("default", "mode_verbose") or False
     init_log(config, mode_verbose)

@@ -7,12 +7,16 @@ Author : Francois Martin-Lefevre : fml@axynergie.com
 
 
 '''
+import sys
+import os
+CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
+PARENT_DIR = os.path.dirname(CURRENT_DIR)
+sys.path.append(PARENT_DIR)
 
 import configparser
 import logging
-import os
 import difflib
-import xml.dom.minidom
+
 import re
 import json
 import jsondiff
@@ -48,12 +52,12 @@ def bool_to_str(b):
      else:
           return "False"
 
-def parse_config(args, module):
+def parse_config(config_file, module):
      ''' parse configuration file
      '''
      config = configparser.ConfigParser(allow_no_value=True,interpolation=EnvInterpolation())
 
-     config.read(args.config)
+     config.read(config_file)
 
      return(config)
 
@@ -222,7 +226,7 @@ def zbx_table(type):
                "flags":
                     {"0":"","4":"autodecouverte"},
                "inventory_mode":
-                    {"-1":"inactif","0":"manuel","0":"automatique"},
+                    {"-1":"inactif","0":"manuel","1":"automatique"},
                "ipmi_available":
                     {"0":"inconnu","1":"disponible","2":"indisponible"},
                "jmx_available":
