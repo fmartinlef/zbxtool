@@ -20,6 +20,13 @@ from shutil import copyfile
 
 from  pyzabbix.api import ZabbixAPI, ZabbixAPIException
 
+class EnvInterpolation(configparser.BasicInterpolation):
+    """Interpolation which expands environment variables in values."""
+
+    def before_get(self, parser, section, option, value, defaults):
+        return os.path.expandvars(value)
+
+
 def str_to_bool(s):
      ''' convert a string to corresponding boolean value
           "true", "vrai", "1" : True
@@ -44,7 +51,8 @@ def bool_to_str(b):
 def parse_config(args, module):
      ''' parse configuration file
      '''
-     config = configparser.ConfigParser(allow_no_value=True)
+     config = configparser.ConfigParser(allow_no_value=True,interpolation=EnvInterpolation())
+
      config.read(args.config)
 
      return(config)

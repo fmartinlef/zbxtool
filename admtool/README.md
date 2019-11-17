@@ -49,8 +49,8 @@ Create an excel file with 4 sheets
 « STATS » sheet : pivot table simples for host count in several columns 
 
 
-## Order of calling parameters
-The calling parameters order are
+## Calling parameters
+The calling parameter order is
 
 1- option in command line (-- parameter in command line) 
 
@@ -58,8 +58,10 @@ The calling parameters order are
 
 3- default option (appear whith --help option))
 
+## config.ini setup
+the config.ini file is self documented and accept environment variable interpolation
 
-### example of use
+# examples of tool calling
 1/ python hosts_config.py --zbxenv prod --limit 10
 
 generate an excel file with first 10 hosts in zabbix production environnement

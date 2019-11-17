@@ -252,6 +252,11 @@ def ws_host_title(host_tbl, host_lst):
     return result
 
 def ws_host_data(host_tbl, host_lst):
+    ''' append zabbix data to worksheet data structure
+            [[row1],[row2], ...]
+        where row is a list of 'host_tpl' value in the correct 'host_lst' order
+    '''
+
     result =[]
     for ho in host_tbl:
         tmp_result=[]
@@ -328,7 +333,7 @@ def xl_create_dataframe(ws):
         - first line of ws sheet is the columns name
         - no index in the ws, values in columns are not unique
 
-        return a dataframe object
+        return a pandas dataframe object
     '''
     data = ws.values
     cols = next(data)[0:]
@@ -342,7 +347,8 @@ def zbx_stat(df, ws, val, pv_lst, startcol):
             df : dataframe
             ws : worksheet
             val : count value for pivot
-            pv_list : list of columns pivot compute 
+            pv_list : list of columns pivot compute
+            statcol : starting column for value writing (the row is allways set to 1) 
     '''
     for pv in pv_lst:
         pivot = df.pivot_table(index=pv, values=val, aggfunc="count")
@@ -355,9 +361,8 @@ def zbx_stat(df, ws, val, pv_lst, startcol):
 
 
 def xl_stat(ws, pv, startcol):
-    ''' aggrupates and format all statistics in a single sheet 
+    ''' format all statistics in a single sheet 
         inputs :
-            - workbook
             - worksheet name (if not exist will be created)
             - pv : pivot dataframe  
             - startcolumn
@@ -402,16 +407,16 @@ if __name__ == '__main__':
     zbxtool_dir = config["paths"]["zbxtool_dir"]  
     dir_data = zbxtool_dir + "/"  + config[module]["save_dir"] + "/"  + zbxenv + "/"
 
-    print("DIRECTORY : ",dir_data)
+    logging.info("save directory is : %s", dir_data)
 
     if not os.path.exists(dir_data):
         os.makedirs(dir_data)
 
     if limit_host != 0:
-        logging.info("limitation du nombre de host activé : " + str(limit_host) + " Hosts")
+        logging.info("max number of host activated %s hosts", str(limit_host))
 
     
-    logging.info("environnement zabbix = " + zbxenv)
+    logging.info("zabbix environment = %s ", zbxenv)
 
 
     # init global variable

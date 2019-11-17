@@ -33,19 +33,15 @@ Prerequesites : - python 3.7 +
 
     pip install -r requirements.txt
 
-6/ access of utils directory
+6/ access of tool directory
 
-    cd utils
+    cd admtool / cd migtool
 
 7/ adapt config.ini for use
-    replace variables with the corresponding values
+    replace variables with the selected values
     
-        zbx_url = <zabbix url>
-        zbx_usr = <zabbix usr>
-        zbx_pwd = <zabbix pwd>
 
 8/ execute the utilities
 
-    python hosts_config.py --help
-    python templates_export.py --help
-
+    python <selected tool.py> --help
+ 

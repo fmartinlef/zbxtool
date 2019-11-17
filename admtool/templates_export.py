@@ -47,11 +47,6 @@ def export_tpl(zapi, te):
 
 
     '''
-    # te_xml = zapi.configuration.export(format="xml",
-    #                                     options={"templates": [te["templateid"]]}
-    #                                     )
-    # dom = xml.dom.minidom.parseString(te_xml)
-    # te_xml_formated = dom.toprettyxml()
     result = ""
 
     # generate xml file 
@@ -73,15 +68,12 @@ def export_tpl(zapi, te):
             fn2 = fdir + te["name"] + ".xml"
             fn3 = fdir + te["name"] + ".json"            
             result = copy_file(fdir, tmp_xml, fn2, "xml")
-            if mode_verbose:
-                logging.info("template '%s.xml' %s in '%s' group", te["name"], result, hg["name"])
+            logging.info("template '%s.xml' %s in '%s' group", te["name"], result, hg["name"])
             result = copy_file(fdir, tmp_json, fn3, "json")
-            if mode_verbose:
-                logging.info("template '%s.json' %s in '%s' group", te["name"], result, hg["name"])
+            logging.info("template '%s.json' %s in '%s' group", te["name"], result, hg["name"])
         else:
             result = "nomatch"
-            if mode_verbose:
-                logging.info("template '%s' %s in '%s' group", te["name"], result, hg["name"])    
+            logging.info("template '%s' %s in '%s' group", te["name"], result, hg["name"])    
 
 
     return result
@@ -264,6 +256,9 @@ def zbx_tpl_qry(zapi, te, qry):
     global sel
     global desc
 
+    if mode_verbose:
+        logging.info("query template ID = %s / QRY = %s", te, qry)
+
     #  print("QRY : ", qry, "\nSEL:", sel, "\nDESC:", desc)
     title = dict(zip(sel[qry], desc[qry]))
     convert = zbx_table("init")
@@ -312,11 +307,9 @@ def zbx_tpl_qry(zapi, te, qry):
             res_webscenar.update({"scenar": zbx_tpl_fmtquery([webscenar],qry,sel[qry], title,convert,notshown)})
             tit_webstep = dict(zip(sel["webstep"], desc["webstep"]))
             res_webscenar.update({"step": zbx_tpl_fmtquery(webscenar["steps"],qry,sel["webstep"], tit_webstep,convert,notshown)})
-
-        #     res_webscenar.update({"webscenar": zbx_tpl_fmtquery(webscenar,qry,sel[qry], title,convert,notshown)})
-        # res_webscenar.update({"webscenar": zbx_tpl_fmtquery(lst_webscenar,qry,sel[qry], title,convert,notshown)})
-        
+       
             result.append(res_webscenar)
+
         # print(result)
         return result
 
