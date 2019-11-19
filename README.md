@@ -33,15 +33,13 @@ Prerequesites : - python 3.7 +
 
     pip install -r requirements.txt
 
-6/ access of tool directory
+6/ configure config.ini files in tools directories
 
-    cd admtool / cd migtool
-
-7/ adapt config.ini for use
-    replace variables with the selected values
+    replace variables with the selected values in admtool and migtool directory
     
-
 8/ execute the utilities
+    
+    only from zbxtool directory  
+    python <tool directory>/<selected tool.py> --help
 
-    python <selected tool.py> --help
  

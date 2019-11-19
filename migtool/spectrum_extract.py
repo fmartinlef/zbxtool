@@ -2,6 +2,13 @@
 1/ read a spectrum xml definition file
 2/ produce an external excel definition file
 
+implemented rules for definitions export
+
+
+
+
+
+
 Author : Francois Martin-Lefevre : fml@axynergie.com
 
 '''
@@ -14,7 +21,12 @@ sys.path.append(PARENT_DIR)
 
 import argparse
 
-from xml.dom import minidom
+import xml.etree.ElementTree as ET
+
+from collections import OrderedDict
+from xmljson import BadgerFish
+import json
+
 from openpyxl import Workbook
 from openpyxl.worksheet.table import Table, TableStyleInfo
 from openpyxl.styles import NamedStyle, PatternFill, Font, Border, Side
@@ -43,36 +55,45 @@ def parse_arg():
 
     return args
 
-def get_spectrum_device(xml, attr):
-    ''' get spetrum device list
-        xml : xml dom object
-        attr : list of device attributes 
 
-        result is a list of devices attributes in attr list order
+
+def get_spectrum_topology(json, attr, d):
+    ''' get spectrum topology
+
     '''
-    spectrum_devices = spectrum_xml.getElementsByTagName('Device')
-
-    verbose_msg = 100
     result = []
-    for nb, dev in enumerate(spectrum_devices):
+    for key in json:
         tmp_result = []
-        for at in attr:
-            try:
-                tmp_result.append(dev.attributes[at].value)
-            except KeyError:
-                tmp_result.append("")
-
-        if mode_verbose and (nb % verbose_msg == 0) :
-            logging.info("loop %s devices read", str(nb) )
-
-        result.append(tmp_result)
-        if nb > limit and limit !=0 :
-            logging.info("device scan ended loop due to --limit parameter")
-            break
+        if isinstance(json[key], dict):
+            tmp_result.append(json[key])
+            get_spectrum_topology(json[key], attr ,d+1)
+        elif isinstance(json[key], list):
+            for it in json[key]:
+                try:
+                    tmp_result.append(d)
+                    for l in attr[key]:
+                        tmp_result.append(it[l])
+                except KeyError:
+                        tmp_result.append("")
 
     return result
 
+def json_print(json, d):
+    ''' print json with indentation
 
+    '''
+    indent = ""
+    for i in range(d):
+        indent = indent + "   "
+    for key in json:
+        if isinstance(json[key], dict):
+            print(indent, key, type(json[key]))
+            json_print(json[key],d+1)
+        elif isinstance(json[key], list):
+            print(indent, key, type(json[key]), " -> ", len(json[key]), " occurences")
+            json_print(json[key][0],d+1)
+        else:
+            print(indent, key, type(json[key]))
 
 
 if __name__ == '__main__':
@@ -119,24 +140,39 @@ if __name__ == '__main__':
         logging.error("input file %s not found", infile)
         sys.exit(8)
 
-    # read xml structure
-    spectrum_xml = minidom.parse(infile)
+    bf = BadgerFish(dict_type=OrderedDict, xml_fromstring=False) 
 
-    dev_attr = ["name", "network_address", "model_type", "model_handle", "community_string"]
-    dev_title = ["name", "network_address", "model_type", "model_handle", "community_string"]
-    dev_data = get_spectrum_device(spectrum_xml, dev_attr)
+    # read xml structure
+    with open(infile) as fd:
+        text = fd.read()
+        xml_json = bf.data(ET.fromstring(text))
+
+    # test purpose : print json structure
+    json_print(xml_json, 0)
+
+    attr = {}
+    attr.update({"Topology_Container": ["@name", "@model_type", "@model_handle" ]})
+    attr.update({"Device": ["@name", "@network_address", "@model_type", "@model_handle" ]})
+    topology = get_spectrum_topology(xml_json["SPECTRUM_Export"]["Topology"], attr, 0)
+
+    # exploit topology information
+
+
+    # dev_attr = ["name", "network_address", "model_type", "model_handle", "community_string"]
+    # dev_title = ["name", "network_address", "model_type", "model_handle", "community_string"]
+    # dev_data = get_spectrum_device(xml_tree, dev_attr)
  
 
     # create and process excel data 
-    wb = Workbook()
-    # create named style for excel statistics sheet formating
-    xl_create_named_style(wb)
+    # wb = Workbook()
+    # # create named style for excel statistics sheet formating
+    # xl_create_named_style(wb)
 
-    ws_host = xl_create_ws(wb, "Hosts", dev_title, dev_data)
+    # ws_host = xl_create_ws(wb, "Hosts", dev_title, dev_data)
 
 
-    del wb["Sheet"]
-    wb.save(outfile)
+    # del wb["Sheet"]
+    # wb.save(outfile)
 
     # ending program
 

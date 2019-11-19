@@ -25,3 +25,21 @@ Generate and import zabbix configuration : templates, items, triggers, graphs, s
 ## load zabbix host configuration
 Load zabbix host and hostgroup and attach the hosts to the corresponding templates.
 
+# tools
+## tool :: spectrum extract
+
+    usage: spectrum_extract.py [-h] [--config CONFIG] [--verbose VERBOSE]
+                            [--infile INFILE] [--xlfile XLFILE] [--limit LIMIT]
+
+    spectrum_extract :: extract spectrum definitions from xml export file
+
+    optional arguments:
+    -h, --help         show this help message and exit
+    --config CONFIG    config file path and name (default: config.ini)
+    --verbose VERBOSE  mode verbose (default: false)
+    --infile INFILE    name of input file from spectrum export utility
+    --xlfile XLFILE    name of excel output file
+    --limit LIMIT      for test purpose, limits the number of input definitions
+                        processed
+
+this tool extract relevant information of spectrum definition and generate an intermediate excel file which can be process by convert tools for generating zabbix configuration.
