@@ -185,31 +185,31 @@ def docum_tpl(zapi, te):
     # sel_template = ["host", "description"]
     # desc_template = ["Nom technique", "Description"]
     sel.update({"template": ["host", "description"]})
-    desc.update({"template": ["Nom technique", "Description"]})
+    desc.update({"template": ["tecnical name", "description"]})
     result.update({"template": zbx_tpl_qry(zapi, te, "template")})
 
     sel.update({"hostgroup": ["name"]})
-    desc.update({"hostgroup": ["Hostgroup(s)"]})
+    desc.update({"hostgroup": ["hostgroup(s)"]})
     result.update({"hostgroup": zbx_tpl_qry(zapi, te, "hostgroup")})
 
     sel.update({"macros": ["macro","value"]})
-    desc.update({"macros": ["User macro", "Valeur"]})
+    desc.update({"macros": ["User macro name", "Value"]})
     result.update({"macros": zbx_tpl_qry(zapi, te, "macros")})
 
     sel.update({"items": ["name", "key_", "type", "status", "delay", "history", "trends", "description", "url", "params", "snmp_oid"]})
-    desc.update({"items": ["Nom Item", "Clef", "Type", "Etat", "Freq", "Detail", "Tendance", "Description", "URL de test", "params", "oid SNMP"]})
+    desc.update({"items": ["name", "key", "type", "status", "delay", "history", "trends", "description", "url", "params", "snmp_oid"]})
     result.update({"items": zbx_tpl_qry(zapi, te, "items")})
 
     sel.update({"triggers": ["comments", "description", "expression", "priority", "status", "url", "tags"]})
-    desc.update({"triggers": ["Description", "Alerte", "Expression", "priorité", "Etat", "Consigne", "tags"]})
+    desc.update({"triggers": ["comments", "name", "expression", "priority", "status", "url", "tags"]})
     result.update({"triggers": zbx_tpl_qry(zapi, te, "triggers")})
 
     sel.update({"drules": ["name", "key_", "type", "status", "delay", "description"]})
-    desc.update({"drules": ["Nom", "Clef", "type", "Etat", "Freq", "Description"]})
+    desc.update({"drules": ["name", "key", "type", "status", "delay", "description"]})
     sel.update({"drule_items": ["name", "key_", "type", "status", "delay", "history", "trends", "description", "url", "params", "snmp_oid"]})
-    desc.update({"drule_items": ["Nom Item", "Clef", "Type", "Etat", "Freq", "Detail", "Tendance", "Description", "URL de test", "params", "oid SNMP"]})
+    desc.update({"drule_items": ["name", "key", "type", "status", "delay", "history", "trends", "description", "url", "params", "snmp_oid"]})
     sel.update({"drule_triggers": ["comments", "description", "expression", "priority", "status", "url", "tags"]})
-    desc.update({"drule_triggers": ["Description", "Alerte", "Expression", "priorité", "Etat", "Consigne", "tags"]})
+    desc.update({"drule_triggers": ["comments", "name", "expression", "priority", "status", "url", "tags"]})
  
     result.update({"drules": zbx_tpl_qry(zapi, te, "drules")})
     
@@ -218,9 +218,9 @@ def docum_tpl(zapi, te):
     result.update({"graphs": zbx_tpl_qry(zapi, te, "graphs")})
 
     sel.update({"webscenar": ["name", "delay", "status", "agent"]})
-    desc.update({"webscenar": ["Nom", "Freq", "Etat", "Agent"]})
+    desc.update({"webscenar": ["scenario name", "delay", "status", "agent"]})
     sel.update({"webstep": ["name", "url", "status_codes", "required"]})
-    desc.update({"webstep": ["Etape", "URL", "Html Status", "chaine testee"]})
+    desc.update({"webstep": ["step name", "url", "status_codes", "required"]})
     result.update({"webscenar": zbx_tpl_qry(zapi, te, "webscenar")})
 
 

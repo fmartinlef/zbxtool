@@ -63,19 +63,21 @@ def get_spectrum_topology(json, attr, d):
     '''
     result = []
     for key in json:
-        tmp_result = []
-        if isinstance(json[key], dict):
-            tmp_result.append(json[key])
-            get_spectrum_topology(json[key], attr ,d+1)
-        elif isinstance(json[key], list):
-            for it in json[key]:
-                try:
-                    tmp_result.append(d)
-                    for l in attr[key]:
-                        tmp_result.append(it[l])
-                except KeyError:
-                        tmp_result.append("")
 
+            tmp_result = []
+            if isinstance(json[key], dict):
+                tmp_result.append(json[key])
+                get_spectrum_topology(json[key], attr ,d+1)
+            elif isinstance(json[key], list):
+                for it in json[key]:
+                    try:
+                        tmp_result.append(d)
+                        for l in attr[key]:
+                            tmp_result.append(it[l])
+                    except KeyError:
+                            tmp_result.append("")
+
+            result.append(tmp_result)
     return result
 
 def json_print(json, d):
@@ -148,13 +150,14 @@ if __name__ == '__main__':
         xml_json = bf.data(ET.fromstring(text))
 
     # test purpose : print json structure
-    json_print(xml_json, 0)
+    # json_print(xml_json, 0)
 
     attr = {}
     attr.update({"Topology_Container": ["@name", "@model_type", "@model_handle" ]})
     attr.update({"Device": ["@name", "@network_address", "@model_type", "@model_handle" ]})
     topology = get_spectrum_topology(xml_json["SPECTRUM_Export"]["Topology"], attr, 0)
 
+    print(topology)
     # exploit topology information
 
 
