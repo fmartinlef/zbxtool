@@ -152,3 +152,4 @@ About
 zbx_config/
 zbx_templates/
 zbx_migrate/
+zbxtool.ini
