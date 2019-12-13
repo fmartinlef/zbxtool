@@ -83,6 +83,20 @@ def export_tpl(zapi, te):
 
     return result
 
+def get_api_version(zapi):
+    ''' return a numeric value with API version in 3 digits
+
+    '''
+    result = 0
+    v_txt = zapi.api_version()
+    v_txt = v_txt.replace('.','')
+
+    result = int(v_txt)
+
+    return result
+
+
+
 def zbx_tpl_fmtquery(resp, qry, sel, title, convert, notshown):
      ''' format the zbx tpl queries for table display
           - resp: response zabbix query
@@ -182,6 +196,7 @@ def docum_tpl(zapi, te):
     global sel
     global desc
 
+    result.update({"version": zbx_version})
     # sel_template = ["host", "description"]
     # desc_template = ["Nom technique", "Description"]
     sel.update({"template": ["host", "description"]})
@@ -192,8 +207,12 @@ def docum_tpl(zapi, te):
     desc.update({"hostgroup": ["hostgroup(s)"]})
     result.update({"hostgroup": zbx_tpl_qry(zapi, te, "hostgroup")})
 
-    sel.update({"macros": ["macro","value"]})
-    desc.update({"macros": ["User macro name", "Value"]})
+    if zbx_version >= 440:
+        sel.update({"macros": ["macro","value","description"]})
+        desc.update({"macros": ["User macro name", "Value", "description"]})
+    else:
+        sel.update({"macros": ["macro","value"]})
+        desc.update({"macros": ["User macro name", "Value"]})
     result.update({"macros": zbx_tpl_qry(zapi, te, "macros")})
 
     sel.update({"items": ["name", "key_", "type", "status", "delay", "history", "trends", "description", "url", "params", "snmp_oid"]})
@@ -417,6 +436,8 @@ if __name__ == '__main__':
 
     zapi = zbx_connect(config,zbxenv)
 
+    zbx_version = get_api_version(zapi)
+ 
     # template = zapi.template.get(output="extend")
     
     template = zapi.do_request('template.get',{"output": "extend",

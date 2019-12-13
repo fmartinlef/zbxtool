@@ -32,11 +32,17 @@
             <tr>
                 <th class="tg-cly1">{{ tpl["macros"]["title"]["macro"] }}</th>
                 <th class="tg-cly1">{{ tpl["macros"]["title"]["value"] }}</th>
+            {% if tpl["version"] >= 440 %}
+                <th class="tg-cly1">{{ tpl["macros"]["title"]["description"] }}</th>
+            {% endif %}                    
             </tr>
             {% for macro in tpl["macros"].data %}
                 <tr>
                     <td class="tg-cly1">{{ macro.macro }}</td>
                     <td class="tg-cly1">{{ macro.value }}</td>
+                {% if tpl["version"] >= 440 %}
+                    <td class="tg-cly1">{{ macro.description }}</td>
+                {% endif %}     
                 </tr>
             {% endfor %}
         </table>
