@@ -168,8 +168,8 @@ def fmt_str_trig_expr(txt):
                exprs_lst.append(expr)
                expr_no += 1
                txt = txt.replace(expr, "<b>T" + str(expr_no) + "</b>")
-               if expr_no == 1:
-                    txt = txt + "<br>"
+               # if expr_no == 1:
+               #      txt = txt + "<br>"
                txt = txt + "<br><b>T" + str(expr_no) + "</b> : " + expr 
      
      # print(exprs, "Num =", expr_no )          

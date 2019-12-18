@@ -253,7 +253,7 @@ def zbx_exportXML(zapi, te):
      te_xml = zapi.configuration.export(format="xml",
                                         options={"templates": [te["templateid"]]}
                                         )
-     dom = xml.dom.minidom.parseString(te_xml)
+     dom = xml.dom.minidom.parseString(te_xml.encode('utf-8'))
      te_xml_fmted = dom.toprettyxml()
 
      return te_xml_fmted

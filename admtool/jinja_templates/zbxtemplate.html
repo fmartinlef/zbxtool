@@ -4,8 +4,8 @@
     {{ super() }}
     <style type="text/css">
         .tg  {border-collapse:collapse;border-spacing:0;border-color:#9ABAD9;}
-        .tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:#9ABAD9;color:#444;background-color:#D2E4FC;}
-        .tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:#9ABAD9;color:#fff;background-color:#409cff;}
+        .tg td{font-family:Arial, sans-serif;font-size:12px;padding:5px 3px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:#9ABAD9;color:#444;background-color:#D2E4FC;}
+        .tg th{font-family:Arial, sans-serif;font-size:12px;font-weight:normal;padding:5px 3px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:#9ABAD9;color:#fff;background-color:#409cff;}
         .tg .tg-cly1{text-align:left;vertical-align:middle}
         .tg .tg-5lax{background-color:#EBF5FF;text-align:left;vertical-align:middle}
     </style>
@@ -21,7 +21,7 @@
                 <th class="tg-cly1">{{ tpl["hostgroup"]["title"]["name"] }}</th>
                 <td class="tg-cly1"> 
                     {% for hg in tpl["hostgroup"]["data"] %}
-                       {{ hg["name"] }},
+                       {{ hg["name"] }}{%- if not loop.last -%}<br/>{% endif %}
                     {% endfor %}
                 </td>
             </tr>
@@ -31,18 +31,18 @@
         <table class="tg">
             <tr>
                 <th class="tg-cly1">{{ tpl["macros"]["title"]["macro"] }}</th>
-                <th class="tg-cly1">{{ tpl["macros"]["title"]["value"] }}</th>
             {% if tpl["version"] >= 440 %}
                 <th class="tg-cly1">{{ tpl["macros"]["title"]["description"] }}</th>
-            {% endif %}                    
+            {% endif %}    
+                <th class="tg-cly1">{{ tpl["macros"]["title"]["value"] }}</th>    
             </tr>
             {% for macro in tpl["macros"].data %}
                 <tr>
                     <td class="tg-cly1">{{ macro.macro }}</td>
-                    <td class="tg-cly1">{{ macro.value }}</td>
                 {% if tpl["version"] >= 440 %}
                     <td class="tg-cly1">{{ macro.description }}</td>
                 {% endif %}     
+                    <td class="tg-cly1">{{ macro.value }}</td>
                 </tr>
             {% endfor %}
         </table>
@@ -221,10 +221,10 @@
     <br/> 
 
 
-    <h1>Discovery rules (LLD)</h1>
+    <h2>Discovery rules (LLD)</h2>
     {% if tpl["drules"] %}
         {% for drule in tpl["drules"] %}
-            <h2>Discovery rules : {{ drule["drule"]["data"][0]["name"] }}</h2>
+            <h3>Discovery rules : {{ drule["drule"]["data"][0]["name"] }}</h3>
             <table class="tg">
                 {% if  drule["drule"]["data"][0]["status"] == "actif" %}
                     {% set bgdrule = "#32cb00" %}
@@ -248,7 +248,7 @@
                 </tr>
             </table>
 
-        <h3>Items</h3>
+        <h4>Items</h4>
             {% if drule["items"] %}
                 <table class="tg">
                     <tr>
@@ -317,7 +317,7 @@
                 <p>**** no items ****</p>
             {% endif %}
 
-        <h3>Triggers</h3>
+        <h4>Triggers</h4>
             {% if drule["triggers"] %}
                 <table class="tg">
                     <tr>
