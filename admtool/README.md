@@ -62,14 +62,14 @@ The calling parameter order is
 the config.ini file is self documented and accept environment variable interpolation
 
 # examples of tool calling
-From zbxtool directory 
+From admtool directory 
 
-1/ python admtool/hosts_config.py --zbxenv prod --limit 10
+1/ python hosts_config.py --zbxenv prod --limit 10
 
 generate an excel file with first 10 hosts in zabbix production environnement
 the generated file is in <zbxtool_dir>/<save_dir>/"zbxenv"/ directory
 
-2/ python admtool/templates_export.py --grpname tpl --tplname Template --verbose true
+2/ python templates_export.py --grpname tpl --tplname Template --verbose true
 
 export and document templates which name contains "Template" and pertains in hostgroup "tpl*".
 the generated files are in <zbxtool_dir>/<save_dir>/"zbxenv"/"hostgroup" directories
