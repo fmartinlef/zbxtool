@@ -4,7 +4,7 @@ zbxtool is a set of python command line utilities for zabbix administration
 # Tools directories
 admtool : contains a set of tools for zabbix administration
 
-migtool : contains a set of tools for migrate monitoring solutions to zabbix solution
+excel_tool : excel worksheet for zabbix Hosts massive definitions update
 
 # Installation for developement
 Prerequesites : - python 3.7 +
