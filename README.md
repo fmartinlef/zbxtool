@@ -6,6 +6,7 @@ admtool : contains a set of tools for zabbix administration
 
 excel_tool : excel worksheet for zabbix Hosts massive definitions update
 
+
 # Installation for developement
 Prerequesites : - python 3.7 +
 
