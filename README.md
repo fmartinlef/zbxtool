@@ -36,11 +36,11 @@ Prerequesites : - python 3.7 +
 
 6/ configure config.ini files in tools directories
 
-    replace variables with the selected values in admtool and migtool directory
+    replace variables with the selected values in admtool directory
     
 8/ execute the utilities
     
-    only from zbxtool directory  
-    python <tool directory>/<selected tool.py> --help
+    cd admtool 
+    python <selected tool.py> --help
 
  
