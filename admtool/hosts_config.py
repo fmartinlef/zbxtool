@@ -76,11 +76,11 @@ def zbx_fmt_host(zapi,host,convert, proxy_name):
                 continue
             else:
                 del tmp_result[key1]
-        elif key1 == "inventory":
-            try:
-                tmp_result[key1]["os_full"] = tmp_result[key1]["os_full"].replace(tmp_result[key1]["name"], "") 
-            except KeyError:
-                continue
+        # elif key1 == "inventory":
+        #     try:
+        #         tmp_result[key1]["os_full"] = tmp_result[key1]["os_full"].replace(tmp_result[key1]["name"], "") 
+        #     except KeyError:
+        #         continue
         else:
             try:
                 tmp_result[key1] = convert[key1][host[key1]]
